@@ -1,0 +1,42 @@
+export const topMeals = [
+    {
+        image:"https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg",
+        title:"Pizza"
+    },
+    {
+        image:"https://cdn.pixabay.com/photo/2020/10/05/19/55/hamburger-5630646_1280.jpg",
+        title:"Burger"
+    },
+    {
+        image:"https://cdn.pixabay.com/photo/2017/05/10/17/27/sandwich-2301387_1280.jpg",
+        title:"Sandwich"
+    },
+    {
+        image:"https://cdn.pixabay.com/photo/2014/12/15/13/40/penne-569072_1280.jpg",
+        title:"Pasta"
+    },
+    {
+        image:"https://cdn.pixabay.com/photo/2023/05/27/12/35/noodles-8021415_1280.png",
+        title:"Noodles"
+    },
+    {
+        image:"https://cdn.pixabay.com/photo/2022/03/02/12/40/dish-7043065_1280.jpg",
+        title:"Biryani"
+    },
+    {
+        image:"https://cdn.pixabay.com/photo/2024/01/23/10/02/thali-8527370_1280.jpg",
+        title:"Thali"
+    },
+    {
+        image:"https://cdn.pixabay.com/photo/2022/03/19/12/33/side-dish-7078451_1280.jpg",
+        title:"North Indian Food"
+    },
+    {
+        image:"https://cdn.pixabay.com/photo/2015/08/27/05/11/western-909522_1280.jpg",
+        title:"Rolls"
+    },
+    {
+        image:"https://cdn.pixabay.com/photo/2022/06/23/09/38/chicken-7279387_1280.jpg",
+        title:"Chicken"
+    }
+]
