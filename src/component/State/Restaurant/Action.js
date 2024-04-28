@@ -1,6 +1,7 @@
 import { api } from "../../config/api"
 
 import {
+    // Restaurant related constants
     CREATE_RESTAURANT_REQUEST,
     CREATE_RESTAURANT_SUCCESS,
     CREATE_RESTAURANT_FAILURE,
@@ -22,7 +23,8 @@ import {
     UPDATE_RESTAURANT_STATUS_REQUEST,
     UPDATE_RESTAURANT_STATUS_SUCCESS,
     UPDATE_RESTAURANT_STATUS_FAILURE,
-    // Event related imports
+  
+    // Event related constants
     CREATE_EVENTS_REQUEST,
     CREATE_EVENTS_SUCCESS,
     CREATE_EVENTS_FAILURE,
@@ -35,14 +37,16 @@ import {
     GET_RESTAURANTS_EVENTS_REQUEST,
     GET_RESTAURANTS_EVENTS_SUCCESS,
     GET_RESTAURANTS_EVENTS_FAILURE,
-    // Category related imports
+  
+    // Category related constants
     CREATE_CATEGORY_REQUEST,
     CREATE_CATEGORY_SUCCESS,
     CREATE_CATEGORY_FAILURE,
-    GET_RESTAURANTS_CATEGORIES_REQUEST,
-    GET_RESTAURANTS_CATEGORIES_SUCCESS,
-    GET_RESTAURANTS_CATEGORIES_FAILURE,
-} from "./ActionType"
+    GET_RESTAURANTS_CATEGORY_REQUEST, // Corrected typo (GET_RESTAURANTS_CATEGORIES_REQUEST)
+    GET_RESTAURANTS_CATEGORY_SUCCESS,
+    GET_RESTAURANTS_CATEGORY_FAILURE,
+  } from './ActionType'; 
+  
 
 export const getAllRestaurantsAction = (token) => {
     return async (dispatch) => {
@@ -63,6 +67,7 @@ export const getAllRestaurantsAction = (token) => {
 }
 
 export const getRestaurantById = (reqData) => {
+    console.log("Inside getRestaurantId function");
     return async (dispatch) => {
         dispatch({type: GET_RESTAURANT_BY_ID_REQUEST});
         try {
@@ -71,9 +76,10 @@ export const getRestaurantById = (reqData) => {
                     Authorization: `Bearer ${reqData.jwt}`
                 }
             });
+            console.log("Response: ", response);
             dispatch({type: GET_RESTAURANT_BY_ID_SUCCESS, payload:response.data});
         } catch (error) {
-            console.log(error);
+            console.log("Error: ", error);
             dispatch({type: GET_RESTAURANT_BY_ID_FAILURE, payload: error});
         }
     }
@@ -264,17 +270,17 @@ export const createCategoryAction = ({reqData, jwt}) => {
 export const getRestaurantsCategory = ({jwt, restaurantId}) => {
     console.log("token ---------- ", jwt);
     return async (dispatch) => {
-        dispatch({type: GET_RESTAURANTS_CATEGORIES_REQUEST});
+        dispatch({type: GET_RESTAURANTS_CATEGORY_REQUEST});
         try {
             const res = await api.get(`/api/category/restaurant/${restaurantId}`, {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
             });
-            dispatch({type: GET_RESTAURANTS_CATEGORIES_SUCCESS, payload:res.data});
+            dispatch({type: GET_RESTAURANTS_CATEGORY_SUCCESS, payload:res.data});
         } catch (error) {
             console.log(error);
-            dispatch({type: GET_RESTAURANTS_CATEGORIES_FAILURE, payload: error});
+            dispatch({type: GET_RESTAURANTS_CATEGORY_FAILURE, payload: error});
         }
     }
 }

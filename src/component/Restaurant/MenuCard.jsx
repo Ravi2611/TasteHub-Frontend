@@ -1,7 +1,19 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, FormControlLabel, FormGroup } from '@mui/material'
-import React from 'react'
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    Typography,
+  } from "@mui/material";
+import React, { useState } from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { CheckBox } from '@mui/icons-material'
+import { categorizeIngredients } from '../util/categorizeIngredients'
+import { useDispatch } from 'react-redux'
+import { addItemToCart, findCart } from "../State/Cart/Action";
 
 
 const demo = [
@@ -16,56 +28,122 @@ const demo = [
 ]
 
 
-export const MenuCard = () => {
-    const handleCheckBoxChange = (value) => {
-        console.log("value")
+export const MenuCard = ({item}) => {
+    const dispatch = useDispatch();
+  const [selectedIngredients, setSelectedIngredients] = useState([]);
+
+
+  const handleCheckboxChange = (itemName) => {
+    console.log("Entered Checkbox Change")
+    if (selectedIngredients.includes(itemName)) {
+      console.log("yes");
+      setSelectedIngredients(
+        // If already present than remove
+        selectedIngredients.filter((item) => item !== itemName)
+      );
+    } else {
+      console.log("no");
+      setSelectedIngredients([...selectedIngredients, itemName]);
     }
-    return (
-        <Accordion>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1-content"
-                id="panel1-header"
-            >
-                <div className='lg:flex items-center justify-between'>
-                    <div className='lg:flex items-center lg:gap-5'>
-                        <img className='w-[7rem] h-[7rem] object-cover p-2 md:p-4 lg:p-6' src='https://cdn.pixabay.com/photo/2016/03/05/19/02/hamburger-1238246_1280.jpg' />
-                    </div>
-                    <div className='space-y-1 lg:space-y-5 lg:max-w-2xl'>
-                        <p className='font-semibold text-xl'> Burger </p>
-                        <p>₹499</p>
-                        <p className='text-gray-400'>
-                            Nice food
-                        </p>
-                    </div>
-                </div>
-            </AccordionSummary>
-            <AccordionDetails>
-                <form>
-                    <div className='flex gap-5 flex-wrap'>
-                        {
-                            demo.map((item) => (
-                                <div >
-                                    <p>
-                                        {item.category}
-                                    </p>
-                                    <FormGroup>
-                                        {item.ingredients.map((item) => (
-                                            <FormControlLabel control={<CheckBox onChange={() => handleCheckBoxChange(item)} />} label={item} />
-                                        ))}
+//     const isSelected = selectedIngredients.includes(itemName);
 
-                                    </FormGroup>
-                                </div>
-                            )
-                            )
-                        }
-                    </div>
+//   // Create a new array based on selection state
+//   const updatedIngredients = isSelected ? 
+//     selectedIngredients.filter(item => item !== itemName) : 
+//     [...selectedIngredients, itemName];
 
-                    <div className='pt-5'>
-                        <Button variant='contained' disabled={false} type='submit'>{true ? "Add to Cart" : "Out of Stock"}</Button>
-                    </div>
-                </form>
-            </AccordionDetails>
-        </Accordion>
-    )
+//   // Update state with the new array
+//   setSelectedIngredients(updatedIngredients);
+  };
+  
+  const handleAddItemToCart = (e) => {
+
+    console.log("Selected ingredients: ", selectedIngredients)
+    e.preventDefault();
+    
+    const data = {
+      token: localStorage.getItem("jwt"),
+      cartItem: {
+        foodId: item.id,
+        quantity: 1,
+        ingredientItems:selectedIngredients
+      },
+    };
+    dispatch(addItemToCart(data));
+  };
+  
+
+  return (
+    <>
+      
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <div className="lg:flex items-center justify-between">
+            <div className="lg:flex items-center lg:space-x-5">
+              <img
+                className="w-[7rem] h-[7rem] object-cover"
+                src={item.images[0]}
+                alt=""
+              />
+
+              <div className="space-y-1 lg:space-y-5 lg:max-w-2xl">
+                <p className="font-semibold text-xl">{item.name}</p>
+                <p>₹{item.price}</p>
+                <p className="text-gray-400">{item.description}</p>
+              </div>
+            </div>
+            {/* <div>
+        <Button onClick={handleAddItemToCart}>Add To Cart</Button>
+      </div> */}
+          </div>
+        </AccordionSummary>
+        <AccordionDetails>
+          <form onSubmit={handleAddItemToCart} >
+            <div className="flex gap-5 flex-wrap">
+               {Object.keys(
+                          categorizeIngredients(item?.ingredients)
+                        )?.map((category) => (
+              <div className="pr-5">
+                
+                <p>{category}</p>
+                <FormGroup >
+                  {categorizeIngredients(item.ingredients)[
+                                category
+                              ].map((ingredient, index) => (
+                    <FormControlLabel
+                      key={ingredient.id}
+                      control={
+                        <Checkbox
+                          checked={selectedIngredients.includes(
+                            ingredient.name
+                          )}
+                          onChange={() =>
+                            handleCheckboxChange(ingredient.name)
+                          }
+                          disabled={!ingredient.inStock}
+                        />
+                      }
+                      label={ingredient.name}
+                    />
+                  ))}
+                </FormGroup>
+              </div>
+            ))}
+            </div>
+           
+
+            <div className="pt-5">
+              <Button variant="contained" disabled={!item.available} type="submit">
+                {item.available?"Add To Cart":"Out of stock"}
+              </Button>
+            </div>
+          </form>
+        </AccordionDetails>
+      </Accordion>
+    </>
+  );
 }
